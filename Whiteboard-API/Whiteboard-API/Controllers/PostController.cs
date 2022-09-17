@@ -60,11 +60,31 @@ namespace Whiteboard_API.Controllers
         }
 
         //delete post with the same user id
+        [HttpDelete]
+        [Route("/DeleteMyPost/{id}"), Authorize]
+        public async Task<ActionResult<Post>> DeletePost(int id)
+        {
+            var post = await _context.Post.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
 
+            if (post.UserId != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+            {
+                return Unauthorized();
+            }
 
+            _context.Post.Remove(post);
+            await _context.SaveChangesAsync();
+
+            return post;
+        }
+
+        
         //delete post by id
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Post>> DeletePost(int id)
+        public async Task<ActionResult<Post>> DeleteUserPost(int id)
         {
             var post = await _context.Post.FindAsync(id);
             if (post == null)
