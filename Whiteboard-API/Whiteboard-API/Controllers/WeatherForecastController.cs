@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Whiteboard_API.Model;
 
 namespace Whiteboard_API.Controllers
 {
