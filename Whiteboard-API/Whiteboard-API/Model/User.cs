@@ -8,15 +8,24 @@
     }
 
 
+    public class UserDTO
+    {
+        public string Username { get; set; } = string.Empty;
+
+        public string Password { get; set; } = string.Empty;
+    }
+
     public class User
     {
-        public int Id { get; set; }
-
-        public string Username { get; set; }
-
-        public string Password { get; set; }
+        public int UserId { get; set; }
 
         public Role role { get; set; } = Role.User; // user by default when account created
 
+        public string Username { get; set; } = String.Empty;
+
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
+
+        public List<Post> posts { get; set; } = new List<Post>();
     }
 }

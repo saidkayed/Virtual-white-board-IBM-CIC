@@ -15,5 +15,9 @@ namespace Whiteboard_API.Data
         }
 
         public DbSet<Whiteboard_API.Model.User> User { get; set; } = default!;
+
+        public DbSet<Whiteboard_API.Model.Post> Post { get; set; }
+
+        public DbSet<Whiteboard_API.Model.Comment> Comment { get; set; }
     }
 }

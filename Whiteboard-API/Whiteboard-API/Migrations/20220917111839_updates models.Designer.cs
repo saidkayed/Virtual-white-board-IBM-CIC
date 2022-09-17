@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Whiteboard_API.Data;
 
@@ -11,9 +12,10 @@ using Whiteboard_API.Data;
 namespace Whiteboard_API.Migrations
 {
     [DbContext(typeof(Whiteboard_APIContext))]
-    partial class Whiteboard_APIContextModelSnapshot : ModelSnapshot
+    [Migration("20220917111839_updates models")]
+    partial class updatesmodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,34 +23,6 @@ namespace Whiteboard_API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("Whiteboard_API.Model.Comment", b =>
-                {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"), 1L, 1);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommentId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Comment");
-                });
 
             modelBuilder.Entity("Whiteboard_API.Model.Post", b =>
                 {
@@ -65,8 +39,9 @@ namespace Whiteboard_API.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Likes")
-                        .HasColumnType("int");
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -74,9 +49,6 @@ namespace Whiteboard_API.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("isAnonymous")
-                        .HasColumnType("bit");
 
                     b.HasKey("PostId");
 
@@ -113,27 +85,15 @@ namespace Whiteboard_API.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Whiteboard_API.Model.Comment", b =>
-                {
-                    b.HasOne("Whiteboard_API.Model.Post", null)
-                        .WithMany("comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Whiteboard_API.Model.Post", b =>
                 {
-                    b.HasOne("Whiteboard_API.Model.User", null)
+                    b.HasOne("Whiteboard_API.Model.User", "User")
                         .WithMany("posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("Whiteboard_API.Model.Post", b =>
-                {
-                    b.Navigation("comments");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Whiteboard_API.Model.User", b =>

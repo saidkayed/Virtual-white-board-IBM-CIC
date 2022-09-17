@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Whiteboard_API.Data;
 
@@ -11,9 +12,10 @@ using Whiteboard_API.Data;
 namespace Whiteboard_API.Migrations
 {
     [DbContext(typeof(Whiteboard_APIContext))]
-    partial class Whiteboard_APIContextModelSnapshot : ModelSnapshot
+    [Migration("20220917120603_model updatedpt5")]
+    partial class modelupdatedpt5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,6 +48,8 @@ namespace Whiteboard_API.Migrations
                     b.HasKey("CommentId");
 
                     b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comment");
                 });
@@ -115,20 +119,32 @@ namespace Whiteboard_API.Migrations
 
             modelBuilder.Entity("Whiteboard_API.Model.Comment", b =>
                 {
-                    b.HasOne("Whiteboard_API.Model.Post", null)
+                    b.HasOne("Whiteboard_API.Model.Post", "Post")
                         .WithMany("comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Whiteboard_API.Model.User", "User")
+                        .WithMany("comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Whiteboard_API.Model.Post", b =>
                 {
-                    b.HasOne("Whiteboard_API.Model.User", null)
+                    b.HasOne("Whiteboard_API.Model.User", "User")
                         .WithMany("posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Whiteboard_API.Model.Post", b =>
@@ -138,6 +154,8 @@ namespace Whiteboard_API.Migrations
 
             modelBuilder.Entity("Whiteboard_API.Model.User", b =>
                 {
+                    b.Navigation("comments");
+
                     b.Navigation("posts");
                 });
 #pragma warning restore 612, 618
