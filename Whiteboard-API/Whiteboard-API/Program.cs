@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Whiteboard_APIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Whiteboard_APIContext") ?? throw new InvalidOperationException("Connection string 'Whiteboard_APIContext' not found.")));
 
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -44,6 +45,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<Whiteboard_APIContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
