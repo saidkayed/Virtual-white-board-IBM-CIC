@@ -17,6 +17,10 @@ not only C# is my main language, other reasions is:
 cons with it
 * endpoints hard to unit-test if you dont do the repository design pattern approach.
 
+# Setup Guide (tomorrow sunday i will see i can make it easyer for u guys by having it in a container on docker instead)
+* make sure microsoft sql server is installed i got: Microsoft SQL Server Management Studio 18
+* Connection string matching your server name in appsetting.json. example: (localdb)\MSSQLLocalDB
+* before running the project, run "update-databse" in Package Manager Console
 
 
 
