@@ -45,13 +45,19 @@ namespace Whiteboard_API.Controllers
         [Route("/CreatePost"), Authorize]
         public async Task<ActionResult<Post>> CreatePost([FromBody] PostDTO req)
         {
-         
+            var username = User?.Identity?.Name;
+            if (req.isAnonymous)
+            {
+                username = "anon";
+            }
+            
             Post post = new Post()
             {
                 Title = req.Title,
                 Content = req.Content,
-                UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))
-        };
+                UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                Username = username
+            };
 
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
@@ -81,7 +87,7 @@ namespace Whiteboard_API.Controllers
             return post;
         }
 
-        
+
         //delete post by id
         [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<Post>> DeleteUserPost(int id)
