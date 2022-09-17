@@ -21,6 +21,8 @@
 
         public string Title { get; set; } = string.Empty;
 
+        public string Username { get; set; } = string.Empty;
+
         public bool isAnonymous { get; set; } = false;
 
         public string Content { get; set; } = string.Empty;

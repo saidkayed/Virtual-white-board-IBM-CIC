@@ -261,3 +261,8 @@ C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard
 C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard-API\obj\Debug\net6.0\refint\Whiteboard-API.dll
 C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard-API\obj\Debug\net6.0\Whiteboard-API.pdb
 C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard-API\obj\Debug\net6.0\ref\Whiteboard-API.dll
+C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard-API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard-API\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard-API\bin\Debug\net6.0\Scrutor.dll
+C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard-API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
+C:\Users\sidad\Desktop\Git\Virtual-white-board-IBM-CIC\Whiteboard-API\Whiteboard-API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll

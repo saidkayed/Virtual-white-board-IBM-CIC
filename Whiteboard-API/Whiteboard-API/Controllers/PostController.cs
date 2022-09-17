@@ -21,13 +21,21 @@ namespace Whiteboard_API.Controllers
             _context = context;
         }
 
-        //get all posts
-        //get all users TODO only admin can see all users
+        //get all posts by userid
+        [HttpGet]
+        [Route("/GetAllPostForUser/{id}")]
+        public async Task<ActionResult<IEnumerable<Post>>> GetPosts(int id)
+        {
+            return await _context.Post.Where(p => p.UserId == id).ToListAsync();
+        }
+
+
+        //get all posts with comments included
         [HttpGet]
         [Route("/Posts")]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-            return await _context.Post.ToListAsync();
+            return await _context.Post.Include(p => p.comments).ToListAsync();
         }
 
         //Create a post
@@ -65,6 +73,7 @@ namespace Whiteboard_API.Controllers
 
             return post;
         }
+
 
         //give post a like
         [HttpPut]

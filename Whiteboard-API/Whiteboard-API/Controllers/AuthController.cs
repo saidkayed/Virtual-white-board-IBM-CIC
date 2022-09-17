@@ -26,14 +26,14 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
-    //get all users TODO only admin can see all users
-    [HttpGet]
-    [Route("/Users")]
+
+    //get all users
+    [HttpGet, Authorize]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
-        
         return await _context.User.ToListAsync();
     }
+
 
 
     //create a new user for the platform
