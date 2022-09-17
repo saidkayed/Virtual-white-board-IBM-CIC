@@ -7,6 +7,12 @@
         User
     }
 
+    public class ChangeUsernameDTO
+    {
+
+        public string Username { get; set; } = string.Empty;
+
+    }
 
     public class UserDTO
     {
@@ -14,7 +20,7 @@
 
         public string Password { get; set; } = string.Empty;
     }
-     class UserPostsDTO
+    class UserPostsDTO
     {
         public string Username { get; set; } = string.Empty;
         public List<Post> Posts { get; set; } = new List<Post>();
