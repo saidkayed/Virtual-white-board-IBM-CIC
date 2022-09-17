@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,20 +24,22 @@ namespace Whiteboard_API.Controllers
         }
 
         //add new comment to post use dto
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<ActionResult<Comment>> PostComment(CommentDTO commentDTO)
         {
             var comment = new Comment
             {
+                Username = User?.Identity?.Name,
                 PostId = commentDTO.PostId,
-                UserId = commentDTO.UserId,
+                UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 Content = commentDTO.Content,
                 Date = DateTime.Now
+              
             };
             _context.Comment.Add(comment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetComment", new { id = comment.CommentId }, comment);
+            return Ok(comment);
         }
 
       

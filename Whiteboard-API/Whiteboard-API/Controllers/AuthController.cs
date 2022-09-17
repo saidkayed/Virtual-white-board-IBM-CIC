@@ -89,6 +89,28 @@ public class AuthController : ControllerBase
         return NotFound();
     }
 
+    //reset password
+    [HttpPost]
+    [Route("/ResetPassword")]
+    public async Task<ActionResult<User>> ResetPassword([FromBody] UserDTO req)
+    {
+        if (_context.User.Any(u => u.Username == req.Username))
+        {
+            var user = _context.User.FirstOrDefault(u => u.Username == req.Username);
+
+            CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            _context.User.Update(user);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+        return NotFound();
+    }
 
     private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
@@ -99,6 +121,35 @@ public class AuthController : ControllerBase
             passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
         }
     }
+
+    /*
+    //admin add new user
+    [HttpPost, Authorize(Roles = "Admin")]
+    [Route("/AddUser")]
+    public async Task<ActionResult<User>> AddUser([FromBody] UserDTO req)
+    {
+        if (!_context.User.Any(u => u.Username == req.Username))
+        {
+
+            CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            User user = new User()
+            {
+                Username = req.Username,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                role = Role.User
+            };
+
+            _context.User.Add(user);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+        return NotFound();
+    }
+    */
 
     private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
@@ -156,32 +207,4 @@ public class AuthController : ControllerBase
         }
         return BadRequest("Account not found.");
     }
-
-   
-
-
-    /*
-    [HttpPost]
-    [Route("/ResetPassword")]
-    public async Task<ActionResult<User>> Reset([FromBody] User _user)
-    {
-        var user = _user;
-
-        // check if user exist
-        if (_context.User.Any(u => u.Username == user.Username))
-        {
-
-            user = _context.User.First(u => u.Username == user.Username);
-
-            if (_user.Password != user.Password)
-            {
-                return NotFound();
-            }
-
-            return user;
-        }
-        return NotFound();
-
-    }
-    */
 }
