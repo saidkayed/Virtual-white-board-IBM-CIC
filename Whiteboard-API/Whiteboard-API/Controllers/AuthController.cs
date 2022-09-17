@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Whiteboard_API.Data;
+using Whiteboard_API.Interfaces;
 using Whiteboard_API.Model;
 namespace Whiteboard_API.Controllers;
 
@@ -16,22 +17,28 @@ namespace Whiteboard_API.Controllers;
 public class AuthController : ControllerBase
 {
 
-    private readonly Whiteboard_APIContext _context;
+    private readonly IUserRepository _userRepository;
     IConfiguration _configuration;
 
-
-    public AuthController(Whiteboard_APIContext context, IConfiguration configuration)
+    public AuthController(IUserRepository userRepository, IConfiguration configuration)
     {
-        _context = context;
+        _userRepository = userRepository;
         _configuration = configuration;
     }
+
+    public AuthController(IUserRepository mockUserRepository)
+    {
+        _userRepository = mockUserRepository;
+    }
+
 
     //change user username
     [HttpPut, Authorize]
     [Route("/ChangeUsername")]
     public async Task<ActionResult<User>> ChangeUsername(ChangeUsernameDTO req)
     {
-        var user = await _context.User.FindAsync(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+        var user = await _userRepository.GetUserById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+
         if (user == null)
         {
             return NotFound();
@@ -43,8 +50,8 @@ public class AuthController : ControllerBase
         }
 
         user.Username = req.Username;
-        _context.Entry(user).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+
+        await _userRepository.UpdateUser(user);
 
         return Ok(user);
     }
@@ -52,10 +59,13 @@ public class AuthController : ControllerBase
     //get all users
     [HttpGet, Authorize(Roles = "Admin")]
     [Route("/GetAllUsers")]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    public async Task<ActionResult<List<User>>> GetAllUsers()
     {
-        return await _context.User.ToListAsync();
+        var users = await _userRepository.GetAllUsers();
+
+        return Ok(users);
     }
+
 
 
 
@@ -64,7 +74,7 @@ public class AuthController : ControllerBase
     [Route("/Register")]
     public async Task<ActionResult<User>> Register([FromBody] UserDTO req)
     {
-        if (!_context.User.Any(u => u.Username == req.Username))
+        if (!_userRepository.DoUsernameExist(req.Username).Result)
         {
 
             CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -76,9 +86,8 @@ public class AuthController : ControllerBase
                 PasswordSalt = passwordSalt
             };
 
-            _context.User.Add(user);
+            await _userRepository.CreateUser(user);
 
-            await _context.SaveChangesAsync();
 
             return Ok(user);
         }
@@ -90,7 +99,7 @@ public class AuthController : ControllerBase
     [Route("/RegisterAdmin")]
     public async Task<ActionResult<User>> RegisterAdmin([FromBody] UserDTO req)
     {
-        if (!_context.User.Any(u => u.Username == req.Username))
+        if (!_userRepository.DoUsernameExist(req.Username).Result)
         {
 
             CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -103,9 +112,7 @@ public class AuthController : ControllerBase
                 role = Role.Admin
             };
 
-            _context.User.Add(user);
-
-            await _context.SaveChangesAsync();
+            await _userRepository.CreateUser(user);
 
             return Ok(user);
         }
@@ -117,18 +124,16 @@ public class AuthController : ControllerBase
     [Route("/ResetPassword")]
     public async Task<ActionResult<User>> ResetPassword([FromBody] UserDTO req)
     {
-        if (_context.User.Any(u => u.Username == req.Username))
+        if (_userRepository.DoUsernameExist(req.Username).Result)
         {
-            var user = _context.User.FirstOrDefault(u => u.Username == req.Username);
+            var user = await _userRepository.GetUserByUsername(req.Username);
 
             CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            _context.User.Update(user);
-
-            await _context.SaveChangesAsync();
+            await _userRepository.UpdateUser(user);
 
             return Ok(user);
         }
@@ -180,7 +185,7 @@ public class AuthController : ControllerBase
         {
             var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
 
-             return computedHash.SequenceEqual(passwordHash);
+            return computedHash.SequenceEqual(passwordHash);
         }
     }
 
@@ -208,21 +213,21 @@ public class AuthController : ControllerBase
         return jwt;
     }
 
-    
+
     [HttpPost]
     [Route("/Login")]
     public async Task<ActionResult<string>> Login([FromBody] UserDTO req)
     {
 
         // check if user exist
-        if (_context.User.Any(u => u.Username == req.Username))
+        if (_userRepository.DoUsernameExist(req.Username).Result)
         {
-            User user = _context.User.Single(u => u.Username == req.Username);
+            User user = await _userRepository.GetUserByUsername(req.Username);
 
             if (VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt))
             {
                 string token = CreateToken(user);
-                
+
                 return Ok(token);
 
             }

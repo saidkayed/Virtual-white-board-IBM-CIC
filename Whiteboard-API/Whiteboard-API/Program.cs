@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
+using Whiteboard_API.Interfaces;
+using Whiteboard_API.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Whiteboard_APIContext>(options =>
@@ -14,6 +16,7 @@ builder.Services.AddDbContext<Whiteboard_APIContext>(options =>
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
