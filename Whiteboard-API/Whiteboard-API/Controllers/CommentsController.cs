@@ -25,6 +25,7 @@ namespace Whiteboard_API.Controllers
 
         //add new comment to post use dto
         [HttpPost, Authorize]
+        [Route("/PostComment")]
         public async Task<ActionResult<Comment>> PostComment(CommentDTO commentDTO)
         {
             var comment = new Comment
@@ -34,7 +35,7 @@ namespace Whiteboard_API.Controllers
                 UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 Content = commentDTO.Content,
                 Date = DateTime.Now
-              
+
             };
             _context.Comment.Add(comment);
             await _context.SaveChangesAsync();
@@ -42,9 +43,9 @@ namespace Whiteboard_API.Controllers
             return Ok(comment);
         }
 
-      
-        //delete comment
-        [HttpDelete("{id}")]
+        //delete own user comment
+        [HttpDelete, Authorize]
+        [Route("/DeleteComment/{id}")]
         public async Task<ActionResult<Comment>> DeleteComment(int id)
         {
             var comment = await _context.Comment.FindAsync(id);
@@ -53,11 +54,18 @@ namespace Whiteboard_API.Controllers
                 return NotFound();
             }
 
+            if (comment.UserId != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+            {
+                return Unauthorized();
+            }
+
             _context.Comment.Remove(comment);
             await _context.SaveChangesAsync();
 
             return comment;
         }
+
     }
+
 
 }

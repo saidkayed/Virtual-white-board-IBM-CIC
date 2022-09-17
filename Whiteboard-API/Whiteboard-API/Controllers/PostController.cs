@@ -90,7 +90,8 @@ namespace Whiteboard_API.Controllers
 
 
         //delete post by id
-        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        [HttpDelete, Authorize(Roles = "Admin")]
+        [Route("/DeletePost/{id}")]
         public async Task<ActionResult<Post>> DeleteUserPost(int id)
         {
             var post = await _context.Post.FindAsync(id);
@@ -107,7 +108,7 @@ namespace Whiteboard_API.Controllers
 
 
         //give post a like
-        [HttpPut]
+        [HttpPut, Authorize]
         [Route("/LikePost{id}")]
         public async Task<ActionResult<Post>> LikePost(int id)
         {

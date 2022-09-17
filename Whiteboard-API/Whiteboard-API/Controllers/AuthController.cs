@@ -26,9 +26,32 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
+    //change user username
+    [HttpPut, Authorize]
+    [Route("/ChangeUsername")]
+    public async Task<ActionResult<User>> ChangeUsername(ChangeUsernameDTO req)
+    {
+        var user = await _context.User.FindAsync(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        if (user.UserId != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+        {
+            return Unauthorized();
+        }
+
+        user.Username = req.Username;
+        _context.Entry(user).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+
+        return Ok(user);
+    }
 
     //get all users
     [HttpGet, Authorize(Roles = "Admin")]
+    [Route("/GetAllUsers")]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
         return await _context.User.ToListAsync();
@@ -185,8 +208,7 @@ public class AuthController : ControllerBase
         return jwt;
     }
 
-
-
+    
     [HttpPost]
     [Route("/Login")]
     public async Task<ActionResult<string>> Login([FromBody] UserDTO req)
