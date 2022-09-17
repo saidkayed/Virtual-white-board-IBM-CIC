@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
 
 
     //get all users
-    [HttpGet, Authorize]
+    [HttpGet, Authorize(Roles = "Admin")]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
         return await _context.User.ToListAsync();
@@ -51,6 +51,33 @@ public class AuthController : ControllerBase
                 Username = req.Username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
+            };
+
+            _context.User.Add(user);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+        return NotFound();
+    }
+
+    //register admin user
+    [HttpPost]
+    [Route("/RegisterAdmin")]
+    public async Task<ActionResult<User>> RegisterAdmin([FromBody] UserDTO req)
+    {
+        if (!_context.User.Any(u => u.Username == req.Username))
+        {
+
+            CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            User user = new User()
+            {
+                Username = req.Username,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                role = Role.Admin
             };
 
             _context.User.Add(user);
@@ -89,7 +116,8 @@ public class AuthController : ControllerBase
         List<Claim> claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.role.ToString()),  
+            new Claim(ClaimTypes.Role, user.role.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
         };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
@@ -129,6 +157,7 @@ public class AuthController : ControllerBase
         return BadRequest("Account not found.");
     }
 
+   
 
 
     /*

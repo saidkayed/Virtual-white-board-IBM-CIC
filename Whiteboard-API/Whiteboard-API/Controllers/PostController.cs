@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,15 +42,15 @@ namespace Whiteboard_API.Controllers
 
         //Create a post
         [HttpPost]
-        [Route("/CreatePost")]
+        [Route("/CreatePost"), Authorize]
         public async Task<ActionResult<Post>> CreatePost([FromBody] PostDTO req)
         {
-
+         
             Post post = new Post()
             {
                 Title = req.Title,
                 Content = req.Content,
-                UserId = req.UserId
+                UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))
         };
 
             _context.Post.Add(post);
@@ -57,9 +59,11 @@ namespace Whiteboard_API.Controllers
             return Ok(post);
         }
 
+        //delete post with the same user id
+
 
         //delete post by id
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<Post>> DeletePost(int id)
         {
             var post = await _context.Post.FindAsync(id);
