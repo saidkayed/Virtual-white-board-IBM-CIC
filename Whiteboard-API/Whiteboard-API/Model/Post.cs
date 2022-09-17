@@ -9,8 +9,6 @@
 
         public bool isAnonymous { get; set; } = false;  
 
-        public int UserId { get; set; }
-
         public DateTime Date { get; set; } = DateTime.Now;
     }
 

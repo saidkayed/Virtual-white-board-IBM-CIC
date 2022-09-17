@@ -46,6 +46,7 @@ namespace Whiteboard_API.Controllers
         public async Task<ActionResult<Post>> CreatePost([FromBody] PostDTO req)
         {
             var username = User?.Identity?.Name;
+            
             if (req.isAnonymous)
             {
                 username = "anon";
