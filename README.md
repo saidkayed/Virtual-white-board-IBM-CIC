@@ -20,6 +20,7 @@ cons with it
 # Setup Guide
 * make sure microsoft sql server is installed i got: Microsoft SQL Server Management Studio 18
 * Connection string matching your server name in appsetting.json. example: (localdb)\MSSQLLocalDB
+* Before running the programming write "Update-Database" in Package Manager Console
 
 
 
