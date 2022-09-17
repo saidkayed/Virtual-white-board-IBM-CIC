@@ -122,6 +122,35 @@ public class AuthController : ControllerBase
         }
     }
 
+    /*
+    //admin add new user
+    [HttpPost, Authorize(Roles = "Admin")]
+    [Route("/AddUser")]
+    public async Task<ActionResult<User>> AddUser([FromBody] UserDTO req)
+    {
+        if (!_context.User.Any(u => u.Username == req.Username))
+        {
+
+            CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            User user = new User()
+            {
+                Username = req.Username,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                role = Role.User
+            };
+
+            _context.User.Add(user);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+        return NotFound();
+    }
+    */
+
     private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
         using (var hmac = new HMACSHA512(passwordSalt))
