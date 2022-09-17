@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "RflY3DQsNn36q3cshwZ5+FBj7RDOXJAW+ziJTZLsrEhiqmNBDfP+PGEMots5cT1iVoovOO6K/CBcXjQ6vA2OjQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\sidad\\Desktop\\Git\\Virtual-white-board-IBM-CIC\\Whiteboard-API\\Whiteboard-API\\Whiteboard-API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\sidad\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\sidad\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\sidad\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "C:\\Users\\sidad\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "C:\\Users\\sidad\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "C:\\Users\\sidad\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}
