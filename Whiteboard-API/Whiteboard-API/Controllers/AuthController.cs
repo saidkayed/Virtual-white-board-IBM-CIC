@@ -135,6 +135,29 @@ public class AuthController : ControllerBase
         return NotFound();
     }
 
+    [HttpPost]
+    [Route("/Login")]
+    public async Task<ActionResult<string>> Login([FromBody] UserDTO req)
+    {
+
+        // check if user exist
+        if (_context.User.Any(u => u.Username == req.Username))
+        {
+            User user = _context.User.Single(u => u.Username == req.Username);
+
+            if (VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                string token = CreateToken(user);
+
+                return Ok(token);
+
+            }
+        }
+        return BadRequest("Account not found.");
+    }
+
+
+
     private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
         using (var hmac = new HMACSHA512())
@@ -145,42 +168,13 @@ public class AuthController : ControllerBase
         }
     }
 
-    /*
-    //admin add new user
-    [HttpPost, Authorize(Roles = "Admin")]
-    [Route("/AddUser")]
-    public async Task<ActionResult<User>> AddUser([FromBody] UserDTO req)
-    {
-        if (!_context.User.Any(u => u.Username == req.Username))
-        {
-
-            CreatePasswordHash(req.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-            User user = new User()
-            {
-                Username = req.Username,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                role = Role.User
-            };
-
-            _context.User.Add(user);
-
-            await _context.SaveChangesAsync();
-
-            return Ok(user);
-        }
-        return NotFound();
-    }
-    */
-
     private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
         using (var hmac = new HMACSHA512(passwordSalt))
         {
             var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
 
-             return computedHash.SequenceEqual(passwordHash);
+            return computedHash.SequenceEqual(passwordHash);
         }
     }
 
@@ -208,25 +202,6 @@ public class AuthController : ControllerBase
         return jwt;
     }
 
-    
-    [HttpPost]
-    [Route("/Login")]
-    public async Task<ActionResult<string>> Login([FromBody] UserDTO req)
-    {
 
-        // check if user exist
-        if (_context.User.Any(u => u.Username == req.Username))
-        {
-            User user = _context.User.Single(u => u.Username == req.Username);
 
-            if (VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                string token = CreateToken(user);
-                
-                return Ok(token);
-
-            }
-        }
-        return BadRequest("Account not found.");
-    }
 }
