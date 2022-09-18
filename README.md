@@ -7,10 +7,10 @@ Backend Framework: i have chosen to use ASP.NET Core Web API as the backend fram
 
 Database: MSSQL (relational database) is the database chosen, to store the Data
 
-not only C# is my main language, other reasions is:
-* Quick and Easy Setup with the framwork
+not only C# is my main language, other reasons is:
+* Quick and Easy Setup with the framework
 * EF6 easy Code-First approach (add-migration, update-database)
-* built-in Swagger ui (for quick endpoint testing)
+* built-in Swagger ui (for quick endpoint testing and visual documentation)
 * backed by microsoft
 * huge community
 
@@ -20,7 +20,7 @@ cons with it
 # Setup Guide
 * make sure microsoft sql server is installed i got: Microsoft SQL Server Management Studio 18
 * Connection string matching your server name in appsetting.json. example: (localdb)\MSSQLLocalDB
-* Before running the programming write "Update-Database" in Package Manager Console
+
 
 
 
