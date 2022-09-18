@@ -22,7 +22,7 @@ cons with it
 * make sure microsoft sql server is installed i got: Microsoft SQL Server Management Studio 18
 * Connection string matching your server name in appsetting.json. example: (localdb)\MSSQLLocalDB
 
-#EXSTRA
+# EXSTRA
 i have added a postman json file you guys can import, for easyer endpoint testing (WhiteBoardApi.postman_collection.json)
 
 
