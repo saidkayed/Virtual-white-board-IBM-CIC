@@ -28,7 +28,7 @@ namespace Whiteboard_API.Controllers
         [Route("/GetAllPostForUser/{id}")]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts(int id)
         {
-            return await _context.Post.Where(p => p.UserId == id).ToListAsync();
+            return await _context.Post.Where(p => p.UserId == id).Include(p => p.comments).ToListAsync();
         }
 
 
@@ -109,7 +109,7 @@ namespace Whiteboard_API.Controllers
 
         //give post a like
         [HttpPut, Authorize]
-        [Route("/LikePost{id}")]
+        [Route("/LikePost/{id}")]
         public async Task<ActionResult<Post>> LikePost(int id)
         {
             var post = await _context.Post.FindAsync(id);
