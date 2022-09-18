@@ -7,7 +7,7 @@ Backend Framework: i have chosen to use ASP.NET Core Web API as the backend fram
 
 Database: MSSQL (relational database) is the database chosen, to store the Data
 
-not only C# is my main language, other reasions is:
+not only C# is my main language, other reasons is:
 * Quick and Easy Setup with the framework
 * EF6 easy Code-First approach (add-migration, update-database)
 * built-in Swagger ui (for quick endpoint testing and visual documentation)
