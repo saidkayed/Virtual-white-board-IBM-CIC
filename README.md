@@ -18,6 +18,7 @@ cons with it
 * endpoints hard to unit-test if you dont do the repository design pattern approach.
 
 # Setup Guide
+* Visual Studio 2022 installed
 * make sure microsoft sql server is installed i got: Microsoft SQL Server Management Studio 18
 * Connection string matching your server name in appsetting.json. example: (localdb)\MSSQLLocalDB
 
